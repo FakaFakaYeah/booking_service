@@ -5,7 +5,6 @@ from app.core import get_async_session
 from app.crud import BookingsCrud
 from app.schemas import BookingDB
 
-
 router = APIRouter()
 
 
