@@ -1,24 +1,19 @@
-from pydantic import BaseModel, EmailStr, Field, Extra
+from typing import Optional
+
+from fastapi_users import schemas
+from pydantic import EmailStr, Field
 
 
-class UserBase(BaseModel):
-
-    email: EmailStr
-
-
-class UsersAuth(UserBase):
-
-    email: EmailStr
-    hashed_password: str = Field(
-        alias='password', min_length=6,
-        max_length=16, pattern=r'^[a-zA-Zа-яА-Я0-9]+$'
-    )
-
-    class Config:
-
-        extra = Extra.forbid
+class UserRead(schemas.BaseUser[int]):
+    pass
 
 
-class UsersDB(UserBase):
+class UserCreate(schemas.BaseUserCreate):
 
-    id: int
+    email: EmailStr = Field(example='Your email address')
+    password: str = Field(example='Your password')
+
+
+class UserUpdate(schemas.BaseUserUpdate):
+    password: Optional[str] = Field(example='Your password')
+    email: Optional[EmailStr] = Field(example='Your email address')

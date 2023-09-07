@@ -6,7 +6,4 @@ main_router = APIRouter()
 main_router.include_router(
     bookings_router, prefix='/bookings', tags=['Бронирование']
 )
-
-main_router.include_router(
-    users_router, prefix='/auth', tags=[' Auth & Пользователи']
-)
+main_router.include_router(users_router)

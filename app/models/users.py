@@ -1,10 +1,9 @@
-from sqlalchemy.orm import relationship, Mapped, mapped_column
+from sqlalchemy.orm import relationship
+from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
 
 from app.core import Base
 
 
-class Users(Base):
+class Users(Base, SQLAlchemyBaseUserTable[int]):
 
-    email: Mapped[str] = mapped_column(unique=True)
-    hashed_password: Mapped[str]
     bookings = relationship("Bookings", collection_class=list)
