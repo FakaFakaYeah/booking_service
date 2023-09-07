@@ -1,7 +1,12 @@
 from pydantic import BaseModel, EmailStr, Field, Extra
 
 
-class UsersAuth(BaseModel):
+class UserBase(BaseModel):
+
+    email: EmailStr
+
+
+class UsersAuth(UserBase):
 
     email: EmailStr
     hashed_password: str = Field(
@@ -14,7 +19,6 @@ class UsersAuth(BaseModel):
         extra = Extra.forbid
 
 
-class UsersDB(UsersAuth):
+class UsersDB(UserBase):
 
     id: int
-    hashed_password: str

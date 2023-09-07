@@ -3,10 +3,10 @@ from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud import Users_crud
-from app.services import Password
+from app.services.auth import verify_password
 
 
-async def check_email(email, session: AsyncSession):
+async def check_email_duplicate(email, session: AsyncSession):
 
     results = await Users_crud.get_one(session=session, email=email)
     if results:
@@ -24,7 +24,7 @@ async def check_login(email, password, session: AsyncSession):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f'Пользователь с email: {email} не зарегистрирован!'
         )
-    if not Password.verify_password(
+    if not verify_password(
             plain_password=password, hashed_password=user.hashed_password
     ):
         raise HTTPException(
