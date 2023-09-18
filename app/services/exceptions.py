@@ -14,3 +14,8 @@ class RoomCannotBeBooked(CustomExceptions):
     status_code = status.HTTP_400_BAD_REQUEST
     detail = "Не осталось свободных номеров"
 
+
+class ObjNotFound(CustomExceptions):
+    status_code = status.HTTP_404_NOT_FOUND
+    detail = "Объект не найден"
+

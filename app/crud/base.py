@@ -1,5 +1,10 @@
-from sqlalchemy import select
+from datetime import date
+
+from sqlalchemy import select, and_
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.services.exceptions import ObjNotFound
+from app.models import Bookings
 
 
 class CRUDBase:
@@ -19,10 +24,12 @@ class CRUDBase:
 
     async def get_by_id(self, obj_id: int, session: AsyncSession):
 
-        result = await session.scalars(
+        result = await session.scalar(
             select(self.__model).filter_by(id=obj_id)
         )
-        return result.first()
+        if not result:
+            raise ObjNotFound
+        return result
 
     async def create(self, obj_in, session: AsyncSession):
 
@@ -32,4 +39,15 @@ class CRUDBase:
         await session.refresh(obj)
         return obj
 
+    @staticmethod
+    def get_all_bookings_with_user_date(
+            date_from: date,
+            date_to: date,
+    ):
+        return select(Bookings).where(
+            and_(
+                Bookings.date_from < date_to,
+                Bookings.date_to > date_from
+            )
+        ).cte('booking_rooms')
 

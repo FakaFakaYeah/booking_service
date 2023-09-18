@@ -6,4 +6,4 @@ from app.core import Base
 
 class Users(Base, SQLAlchemyBaseUserTable[int]):
 
-    bookings = relationship("Bookings", collection_class=list)
+    bookings = relationship("Bookings", backref='user')
