@@ -16,7 +16,7 @@ class HotelsCrudBase(CRUDBase):
             date_to: date,
             session: AsyncSession
     ):
-        booking_rooms = CRUDBase.get_all_bookings_with_user_date(
+        booking_rooms = await CRUDBase.get_all_bookings_with_user_date(
             date_from=date_from, date_to=date_to
         )
 
@@ -47,7 +47,7 @@ class HotelsCrudBase(CRUDBase):
             date_to: date,
             session: AsyncSession
     ):
-        booking_rooms = CRUDBase.get_all_bookings_with_user_date(
+        booking_rooms = await CRUDBase.get_all_bookings_with_user_date(
             date_from=date_from, date_to=date_to
         )
 

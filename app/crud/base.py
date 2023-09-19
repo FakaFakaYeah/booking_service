@@ -1,6 +1,6 @@
 from datetime import date
 
-from sqlalchemy import select, and_
+from sqlalchemy import select, and_, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.services.exceptions import ObjNotFound
@@ -40,7 +40,12 @@ class CRUDBase:
         return obj
 
     @staticmethod
-    def get_all_bookings_with_user_date(
+    async def delete(obj, session: AsyncSession) -> None:
+        await session.delete(obj)
+        await session.commit()
+
+    @staticmethod
+    async def get_all_bookings_with_user_date(
             date_from: date,
             date_to: date,
     ):

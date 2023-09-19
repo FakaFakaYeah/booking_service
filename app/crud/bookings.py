@@ -18,7 +18,7 @@ class BookingCRUDBase(CRUDBase):
             date_to: date,
             session: AsyncSession
     ):
-        booking_rooms = CRUDBase.get_all_bookings_with_user_date(
+        booking_rooms = await CRUDBase.get_all_bookings_with_user_date(
             date_from=date_from, date_to=date_to
         )
 
@@ -42,6 +42,28 @@ class BookingCRUDBase(CRUDBase):
             return new_booking.first()
         else:
             raise RoomCannotBeBooked
+
+    @staticmethod
+    async def get_all_user_bookings(
+            user_id: int,
+            session: AsyncSession
+    ):
+        user_bookings = select(
+            Bookings.room_id,
+            Bookings.user_id,
+            Bookings.date_from,
+            Bookings.date_to,
+            Bookings.price,
+            Bookings.total_cost,
+            Bookings.total_days,
+            Rooms.image_id,
+            Rooms.name,
+            Rooms.description,
+            Rooms.services
+        ).join(Rooms).where(Bookings.user_id == user_id)
+
+        user_bookings = await session.execute(user_bookings)
+        return user_bookings.all()
 
 
 BookingsCrud = BookingCRUDBase(Bookings)
