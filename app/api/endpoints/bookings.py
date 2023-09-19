@@ -37,7 +37,7 @@ async def add_booking(
     date_to: date,
     session: AsyncSession = Depends(get_async_session),
     user: Users = Depends(current_user)
-) -> dict[str]:
+) -> dict[str, str]:
     """
     Бронирование номера пользователем
     - **room_id** - id номера, который нужно забронировать
@@ -56,13 +56,12 @@ async def add_booking(
     '/{object_id}',
     summary='Удаление брони пользователя',
     description='Удаление доступно только админу или владельцу брони'
-
 )
 async def delete_booking(
         booking_id: int,
         session: AsyncSession = Depends(get_async_session),
         user: Users = Depends(current_user)
-) -> dict[str]:
+) -> dict[str, str]:
     booking = await BookingsCrud.get_by_id(session=session, obj_id=booking_id)
     is_author_or_admin(obj=booking, user=user)
     await BookingsCrud.delete(session=session, obj=booking)
