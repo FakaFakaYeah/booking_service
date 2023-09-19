@@ -13,4 +13,4 @@ class Hotels(Base):
     services: Mapped[Optional[list[str]]] = mapped_column(JSON)
     rooms_quantity: Mapped[int]
     image_id: Mapped[Optional[int]]
-    rooms = relationship("Rooms", collection_class=list)
+    rooms = relationship("Rooms", backref='hotel')
