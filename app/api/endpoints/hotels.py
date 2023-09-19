@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud import HotelsCrud
 from app.core import get_async_session
-from app.schemas.hotels import HotelsLocationDB
+from app.schemas.hotels import HotelsDB
 from app.schemas.rooms import RoomsPriceDB
 
 
@@ -15,7 +15,7 @@ router = APIRouter()
 @router.get(
     '/',
     summary='Получение списка отелей',
-    response_model=list[HotelsLocationDB]
+    response_model=list[HotelsDB]
 )
 async def get_all_hotels(
     date_from: date,
@@ -57,3 +57,16 @@ async def get_hotel_rooms(
         session=session
     )
     return rooms
+
+
+@router.get(
+    '/{hotel_id}',
+    summary='Получаем информацию по конкретному отелю',
+    response_model_exclude=['rooms_left'],
+    response_model=HotelsDB
+)
+async def get_hotel(
+        hotel_id: int,
+        session: AsyncSession = Depends(get_async_session)
+):
+    return await HotelsCrud.get_by_id(obj_id=hotel_id, session=session)

@@ -1,7 +1,9 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
-class HotelsLocationDB(BaseModel):
+class HotelsDB(BaseModel):
 
     id: int
     name: str
@@ -9,4 +11,4 @@ class HotelsLocationDB(BaseModel):
     services: list[str]
     rooms_quantity: int
     image_id: int
-    rooms_left: int
+    rooms_left: Optional[int] = None
