@@ -14,3 +14,6 @@ class Hotels(Base):
     rooms_quantity: Mapped[int]
     image_id: Mapped[Optional[int]]
     rooms = relationship("Rooms", backref='hotel')
+
+    def __repr__(self):
+        return f'{self.id}-{self.name}'

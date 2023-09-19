@@ -15,4 +15,7 @@ class Rooms(Base):
     services: Mapped[Optional[list[str]]] = mapped_column(JSON)
     quantity: Mapped[int]
     image_id: Mapped[Optional[int]]
-    bookings = relationship("Bookings", collection_class=list)
+    bookings = relationship("Bookings", backref='room')
+
+    def __repr__(self):
+        return f'{self.id}-{self.name}'
