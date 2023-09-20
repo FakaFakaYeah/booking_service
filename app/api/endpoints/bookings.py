@@ -29,7 +29,8 @@ async def get_bookings(
 
 @router.post(
     '/',
-    summary='Бронирование номера'
+    summary='Бронирование номера',
+    status_code=201
 )
 async def add_booking(
     room_id: int,
