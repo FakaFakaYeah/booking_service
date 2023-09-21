@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud import CRUDBase
 from app.models import Bookings, Rooms
-from app.services.exceptions import RoomCannotBeBooked
+from app.api.exceptions import RoomCannotBeBooked
 
 
 class BookingCRUDBase(CRUDBase):
