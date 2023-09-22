@@ -5,10 +5,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core import get_async_session
 from app.crud import BookingsCrud, RoomsCrud
-from app.schemas.bookings import BookingDB
+from app.schemas.bookings import BookingDB, BookingWithRoom
 from app.models import Users
 from app.core.users import current_user
 from app.api.validators import is_author_or_admin
+from app.tasks.tasks import send_booking_confirmation_email
 
 router = APIRouter()
 
@@ -16,7 +17,7 @@ router = APIRouter()
 @router.get(
     '/',
     summary='Получить все бронирования текущего пользователя',
-    response_model=list[BookingDB],
+    response_model=list[BookingWithRoom],
 )
 async def get_bookings(
         session: AsyncSession = Depends(get_async_session),
@@ -45,10 +46,11 @@ async def add_booking(
     - **date_to** - по какое число забронировать
     """
     await RoomsCrud.get_by_id(session=session, obj_id=room_id)
-    await BookingsCrud.create(
+    booking_id = await BookingsCrud.create(
         room_id=room_id, user_id=user.id, date_from=date_from, date_to=date_to,
         session=session
     )
+    send_booking_confirmation_email.delay(booking_id, user.email)
     return dict(detail='Номер успешно забронирован!')
 
 
@@ -66,3 +68,14 @@ async def delete_booking(
     is_author_or_admin(obj=booking, user=user)
     await BookingsCrud.delete(session=session, obj=booking)
     return dict(detail='Бронь успешно удалена')
+
+
+@router.get(
+    '/{booking_id}',
+    response_model=BookingDB
+)
+async def get_booking(
+    booking_id: int,
+    session: AsyncSession = Depends(get_async_session)
+):
+    return await BookingsCrud.get_by_id(obj_id=booking_id, session=session)

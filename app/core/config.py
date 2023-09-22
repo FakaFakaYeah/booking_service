@@ -9,6 +9,11 @@ class Settings(BaseSettings):
     DB_PASS: str
     DB_NAME: str
     SECRET_KEY: str
+    REDIS: str
+    SMTP_HOST: str
+    SMTP_PORT: str
+    SMTP_USER: str
+    SMTP_PASS: str
 
     @property
     def database_url(self):
