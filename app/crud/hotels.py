@@ -38,7 +38,7 @@ class HotelsCrudBase(CRUDBase):
             )
         ).order_by(Hotels.id)
         hotels = await session.execute(hotels)
-        return hotels.all()
+        return hotels.mappings()
 
     @staticmethod
     async def get_all_hotel_rooms(

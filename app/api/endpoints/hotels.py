@@ -2,6 +2,7 @@ from datetime import date
 
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi_cache.decorator import cache
 
 from app.crud import HotelsCrud
 from app.core import get_async_session
@@ -17,6 +18,7 @@ router = APIRouter()
     summary='Получение списка отелей',
     response_model=list[HotelsDB]
 )
+@cache(expire=30)
 async def get_all_hotels(
     date_from: date,
     date_to: date,
