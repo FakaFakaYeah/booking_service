@@ -1,6 +1,6 @@
 from datetime import date
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core import get_async_session
@@ -36,6 +36,7 @@ async def add_booking(
     room_id: int,
     date_from: date,
     date_to: date,
+    background_task: BackgroundTasks,
     session: AsyncSession = Depends(get_async_session),
     user: Users = Depends(current_user)
 ) -> dict[str, str]:
@@ -46,11 +47,13 @@ async def add_booking(
     - **date_to** - по какое число забронировать
     """
     await RoomsCrud.get_by_id(session=session, obj_id=room_id)
-    booking_id = await BookingsCrud.create(
+    booking = await BookingsCrud.create(
         room_id=room_id, user_id=user.id, date_from=date_from, date_to=date_to,
         session=session
     )
-    send_booking_confirmation_email.delay(booking_id, user.email)
+    background_task.add_task(
+        send_booking_confirmation_email, booking, user.email
+    )
     return dict(detail='Номер успешно забронирован!')
 
 
@@ -69,13 +72,3 @@ async def delete_booking(
     await BookingsCrud.delete(session=session, obj=booking)
     return dict(detail='Бронь успешно удалена')
 
-
-@router.get(
-    '/{booking_id}',
-    response_model=BookingDB
-)
-async def get_booking(
-    booking_id: int,
-    session: AsyncSession = Depends(get_async_session)
-):
-    return await BookingsCrud.get_by_id(obj_id=booking_id, session=session)
