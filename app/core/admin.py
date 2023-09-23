@@ -5,8 +5,11 @@ from app.models import Users, Bookings, Hotels, Rooms
 
 class UserAdmin(ModelView, model=Users):
 
-    column_list = [Users.id, Users.email, Users.bookings]
-    column_details_exclude_list = [Users.hashed_password]
+    column_list = [
+        Users.id, Users.email, Users.bookings, Users.is_active,
+        Users.is_superuser, Users.is_verified
+    ]
+    column_details_list = column_list
     can_delete = False
     name = "Пользователь"
     name_plural = "Пользователи"
@@ -14,7 +17,12 @@ class UserAdmin(ModelView, model=Users):
 
 class BookingAdmin(ModelView, model=Bookings):
 
-    column_list = '__all__'
+    column_list = [
+        Bookings.id, Bookings.user, Bookings.room, Bookings.date_from,
+        Bookings.date_to, Bookings.price, Bookings.total_cost,
+        Bookings.total_days
+    ]
+    column_details_list = column_list
     name = "Бронь"
     name_plural = "Брони"
 
