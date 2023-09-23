@@ -3,9 +3,9 @@ from datetime import date
 from sqlalchemy import select, func, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.api.exceptions import RoomCannotBeBooked
 from app.crud import CRUDBase
 from app.models import Bookings, Rooms
-from app.api.exceptions import RoomCannotBeBooked
 
 
 class BookingCRUDBase(CRUDBase):

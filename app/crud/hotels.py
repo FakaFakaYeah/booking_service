@@ -25,7 +25,7 @@ class HotelsCrudBase(CRUDBase):
         ).outerjoin(booking_rooms).group_by(Rooms.hotel_id).cte('rooms_hotels')
 
         hotels = select(
-            Hotels.id,Hotels.name,
+            Hotels.id, Hotels.name,
             Hotels.location,
             Hotels.services,
             Hotels.rooms_quantity,
