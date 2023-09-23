@@ -17,7 +17,7 @@ class Bookings(Base):
         Computed("(date_to - date_from) * price")
     )
     total_days: Mapped[int] = mapped_column(Computed("date_to - date_from"))
-    bookings = relationship("Users", back_populates='bookings', uselist=False)
+    user = relationship("Users", back_populates='bookings', uselist=False)
 
     def __repr__(self):
         return f'Бронирование #{self.id} c {self.date_from} по {self.date_to}'
