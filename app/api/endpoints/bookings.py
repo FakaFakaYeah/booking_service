@@ -3,12 +3,12 @@ from datetime import date
 from fastapi import APIRouter, Depends, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core import get_async_session
-from app.crud import BookingsCrud, RoomsCrud
-from app.schemas.bookings import BookingDB, BookingWithRoom
-from app.models import Users
-from app.core.users import current_user
 from app.api.validators import is_author_or_admin
+from app.core import get_async_session
+from app.core.users import current_user
+from app.crud import BookingsCrud, RoomsCrud
+from app.models import Users
+from app.schemas.bookings import BookingDB, BookingWithRoom
 from app.tasks.tasks import send_booking_confirmation_email
 
 router = APIRouter()
@@ -72,3 +72,13 @@ async def delete_booking(
     await BookingsCrud.delete(session=session, obj=booking)
     return dict(detail='Бронь успешно удалена')
 
+
+@router.get(
+    '/{booking_id}',
+    response_model=BookingDB
+)
+async def get_booking(
+    booking_id: int,
+    session: AsyncSession = Depends(get_async_session)
+):
+    return await BookingsCrud.get_by_id(obj_id=booking_id, session=session)
