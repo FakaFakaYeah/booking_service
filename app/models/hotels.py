@@ -13,7 +13,7 @@ class Hotels(Base):
     services: Mapped[Optional[list[str]]] = mapped_column(JSON)
     rooms_quantity: Mapped[int]
     image_id: Mapped[Optional[int]]
-    rooms = relationship("Rooms", backref='hotel')
+    rooms = relationship("Rooms", back_populates='hotel')
 
     def __repr__(self):
         return f'{self.name}'

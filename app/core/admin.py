@@ -34,8 +34,8 @@ class HotelAdmin(ModelView, model=Hotels):
 class RoomAdmin(ModelView, model=Rooms):
 
     column_list = [
-        Rooms.id, Rooms.name, Rooms.description, Rooms.price, Rooms.services,
-        Rooms.bookings, Rooms.quantity, Rooms.image_id
+        Rooms.id, Rooms.name, Rooms.description, Rooms.hotel, Rooms.price,
+        Rooms.services, Rooms.bookings, Rooms.quantity, Rooms.image_id
     ]
     column_details_list = column_list
     name = "Комната"
