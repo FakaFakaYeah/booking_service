@@ -19,4 +19,4 @@ class Bookings(Base):
     total_days: Mapped[int] = mapped_column(Computed("date_to - date_from"))
 
     def __repr__(self):
-        return f'Booking #{self.id} c {self.date_from} по {self.date_to}'
+        return f'Бронирование #{self.id} c {self.date_from} по {self.date_to}'

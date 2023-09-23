@@ -9,4 +9,4 @@ class Users(Base, SQLAlchemyBaseUserTable[int]):
     bookings = relationship("Bookings", backref='user')
 
     def __repr__(self):
-        return f'{self.email}'
+        return f'Пользователь {self.email}'
