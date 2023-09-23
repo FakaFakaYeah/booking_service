@@ -1,6 +1,6 @@
 from sqladmin import ModelView
 
-from app.models import Users, Bookings
+from app.models import Users, Bookings, Hotels, Rooms
 
 
 class UserAdmin(ModelView, model=Users):
@@ -19,4 +19,17 @@ class BookingAdmin(ModelView, model=Bookings):
     name_plural = "Брони"
 
 
+class HotelAdmin(ModelView, model=Hotels):
 
+    column_list = '__all__'
+    name = "Отель"
+    name_plural = "Отели"
+    can_delete = False
+
+
+class RoomAdmin(ModelView, model=Rooms):
+
+    column_list = '__all__'
+    name = "Комната"
+    name_plural = "Комнаты"
+    can_delete = False
