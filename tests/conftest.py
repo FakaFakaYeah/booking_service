@@ -3,9 +3,9 @@ import asyncio
 import pytest
 from httpx import AsyncClient
 
-from app import Base
+from app.core import Base
 from app.core import settings
-from app.core.db import engine
+from app.core.db import engine, async_session_maker
 from app.main import app as fast_api_app
 
 
@@ -29,6 +29,17 @@ def event_loop(request):
 
 
 @pytest.fixture
+async def session():
+    async with async_session_maker() as session:
+        yield session
+
+
+@pytest.fixture
 async def test_client():
     async with AsyncClient(app=fast_api_app, base_url='http://test') as client:
         yield client
+
+
+pytest_plugins = [
+    'tests.fixtures.user'
+]
