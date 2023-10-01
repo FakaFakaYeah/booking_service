@@ -58,7 +58,7 @@ async def add_booking(
 
 
 @router.delete(
-    '/{object_id}',
+    '/{booking_id}',
     summary='Удаление брони пользователя',
     description='Удаление доступно только админу или владельцу брони'
 )
