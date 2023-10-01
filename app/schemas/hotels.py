@@ -1,4 +1,6 @@
-from pydantic import BaseModel, Field, PositiveInt
+from typing import Optional
+
+from pydantic import BaseModel, PositiveInt, Extra
 
 
 class HotelsDB(BaseModel):
@@ -12,11 +14,31 @@ class HotelsDB(BaseModel):
 
 
 class HotelCreate(BaseModel):
-    name: str = Field(example='Название отеля')
-    location: str = Field(example='Локация отеля')
-    services: list[str] = Field(example=['Сервисы отеля'])
-    rooms_quantity: PositiveInt = Field(example=10)
-    image_id: int = Field(example=1)
+    name: str
+    location: str
+    services: list[str]
+    rooms_quantity: PositiveInt
+    image_id: int
+
+    class Config:
+        extra = Extra.forbid
+        json_schema_extra = {
+            'example': {
+                'name': 'Название отеля',
+                'location': 'Локация отеля',
+                'services': ['Сервисы отеля'],
+                'rooms_quantity': 10,
+                'image_id': 1
+            }
+        }
+
+
+class HotelUpdate(HotelCreate):
+    name: Optional[str] = None
+    location: Optional[str] = None
+    services: Optional[list[str]] = None
+    rooms_quantity: Optional[PositiveInt] = None
+    image_id: Optional[int] = None
 
 
 class HotelsRoomsLeft(HotelsDB):

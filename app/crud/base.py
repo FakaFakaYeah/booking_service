@@ -1,6 +1,6 @@
 from datetime import date
 
-from sqlalchemy import select, and_
+from sqlalchemy import select, and_, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.exceptions import ObjNotFound
@@ -35,6 +35,14 @@ class CRUDBase:
 
         obj = self.__model(**obj_in.dict())
         session.add(obj)
+        await session.commit()
+        await session.refresh(obj)
+        return obj
+
+    async def update(self, obj, obj_in, session: AsyncSession):
+        update_data = obj_in.dict(exclude_unset=True)
+        query = update(self.__model).filter_by(id=obj.id).values(**update_data)
+        await session.execute(query)
         await session.commit()
         await session.refresh(obj)
         return obj

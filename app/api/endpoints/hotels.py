@@ -7,7 +7,9 @@ from fastapi_cache.decorator import cache
 from app.core.users import current_superuser
 from app.crud import HotelsCrud
 from app.core import get_async_session
-from app.schemas.hotels import HotelsDB, HotelsRoomsLeft, HotelCreate
+from app.schemas.hotels import (
+    HotelsDB, HotelsRoomsLeft, HotelCreate, HotelUpdate
+)
 from app.schemas.rooms import RoomsPriceDB
 
 
@@ -30,14 +32,32 @@ async def get_hotel(
     '/',
     summary='Добавление нового Отеля',
     dependencies=[Depends(current_superuser)],
-    response_model=HotelsDB
+    response_model=HotelsDB,
+    description='Добавление нового отеля доступно только администратору'
 )
 async def create_hotel(
     hotel: HotelCreate,
     session: AsyncSession = Depends(get_async_session)
 ):
-    hotel = await HotelsCrud.create(obj_in=hotel, session=session)
-    return hotel
+    return await HotelsCrud.create(obj_in=hotel, session=session)
+
+
+@router.patch(
+    '/hotel_id',
+    summary='Обновление информации об отеле',
+    response_model=HotelsDB,
+    dependencies=[Depends(current_superuser)],
+    description='Обновление информации об отели доступно только администратору'
+)
+async def update_hotel(
+        hotel_id: int,
+        hotel_update: HotelUpdate,
+        session: AsyncSession = Depends(get_async_session)
+):
+    hotel = await HotelsCrud.get_by_id(obj_id=hotel_id, session=session)
+    return await HotelsCrud.update(
+        obj=hotel, obj_in=hotel_update, session=session
+    )
 
 
 @router.get(
