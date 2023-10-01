@@ -19,7 +19,7 @@ router = APIRouter()
     summary='Получить все бронирования текущего пользователя',
     response_model=list[BookingWithRoom],
 )
-async def get_bookings(
+async def get_bookings_user(
         session: AsyncSession = Depends(get_async_session),
         user: Users = Depends(current_user)
 ):

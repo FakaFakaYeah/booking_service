@@ -4,9 +4,10 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi_cache.decorator import cache
 
+from app.core.users import current_superuser
 from app.crud import HotelsCrud
 from app.core import get_async_session
-from app.schemas.hotels import HotelsDB
+from app.schemas.hotels import HotelsDB, HotelsRoomsLeft, HotelCreate
 from app.schemas.rooms import RoomsPriceDB
 
 
@@ -14,9 +15,35 @@ router = APIRouter()
 
 
 @router.get(
+    '/{hotel_id}',
+    summary='Получаем информацию по конкретному отелю',
+    response_model=HotelsDB
+)
+async def get_hotel(
+        hotel_id: int,
+        session: AsyncSession = Depends(get_async_session)
+):
+    return await HotelsCrud.get_by_id(obj_id=hotel_id, session=session)
+
+
+@router.post(
+    '/',
+    summary='Добавление нового Отеля',
+    dependencies=[Depends(current_superuser)],
+    response_model=HotelsDB
+)
+async def create_hotel(
+    hotel: HotelCreate,
+    session: AsyncSession = Depends(get_async_session)
+):
+    hotel = await HotelsCrud.create(obj_in=hotel, session=session)
+    return hotel
+
+
+@router.get(
     '/',
     summary='Получение списка отелей',
-    response_model=list[HotelsDB]
+    response_model=list[HotelsRoomsLeft]
 )
 @cache(expire=30)
 async def get_all_hotels(
@@ -59,16 +86,3 @@ async def get_hotel_rooms(
         session=session
     )
     return rooms
-
-
-@router.get(
-    '/{hotel_id}',
-    summary='Получаем информацию по конкретному отелю',
-    response_model_exclude=['rooms_left'],
-    response_model=HotelsDB
-)
-async def get_hotel(
-        hotel_id: int,
-        session: AsyncSession = Depends(get_async_session)
-):
-    return await HotelsCrud.get_by_id(obj_id=hotel_id, session=session)
