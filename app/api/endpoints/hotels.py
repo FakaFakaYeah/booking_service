@@ -1,6 +1,6 @@
 from datetime import date
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi_cache.decorator import cache
 
@@ -21,6 +21,7 @@ router = APIRouter()
     summary='Получаем информацию по конкретному отелю',
     response_model=HotelsDB
 )
+@cache(expire=30)
 async def get_hotel(
         hotel_id: int,
         session: AsyncSession = Depends(get_async_session)
@@ -58,6 +59,21 @@ async def update_hotel(
     return await HotelsCrud.update(
         obj=hotel, obj_in=hotel_update, session=session
     )
+
+
+@router.delete(
+    '/hotel_id',
+    summary='Удаление отеля',
+    dependencies=[Depends(current_superuser)],
+    description='Удаление отеля доступно только администратору',
+    status_code=status.HTTP_204_NO_CONTENT
+)
+async def delete_hotel(
+        hotel_id: int,
+        session: AsyncSession = Depends(get_async_session)
+):
+    hotel = await HotelsCrud.get_by_id(obj_id=hotel_id, session=session)
+    await HotelsCrud.delete(obj=hotel, session=session)
 
 
 @router.get(
