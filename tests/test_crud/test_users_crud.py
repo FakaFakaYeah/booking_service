@@ -2,6 +2,7 @@ import pytest
 
 from app.crud import UsersCrud
 from app.api.exceptions import ObjNotFound
+from tests.constants import NOT_FOUND_ID
 
 
 async def test_user_get_by_id(session, user_db_1):
@@ -14,9 +15,6 @@ async def test_user_get_by_id(session, user_db_1):
 async def test_user_get_by_id_with_not_found_id(session):
 
     with pytest.raises(ObjNotFound) as exception:
-        await UsersCrud.get_by_id(session=session, obj_id=9999)
+        await UsersCrud.get_by_id(session=session, obj_id=NOT_FOUND_ID)
     assert exception.value.detail == "Объект не найден"
 
-
-async def test(room_db):
-    print(room_db.id)
