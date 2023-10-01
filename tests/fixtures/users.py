@@ -7,12 +7,6 @@ from app.main import app as fast_api_app
 from tests.constants import PASSWORD, AUTH_LOGIN
 
 
-@pytest.fixture
-async def test_client():
-    async with AsyncClient(app=fast_api_app, base_url='http://test') as client:
-        yield client
-
-
 @pytest.fixture(scope='session')
 async def get_cookie():
 
@@ -35,6 +29,12 @@ async def auth_user(get_cookie):
 
 
 @pytest.fixture
+async def test_client():
+    async with AsyncClient(app=fast_api_app, base_url='http://test') as client:
+        yield client
+
+
+@pytest.fixture(scope='session')
 async def user_db_1(session: AsyncSession):
 
     user = Users(email='test_user1@test.ru', hashed_password=PASSWORD)

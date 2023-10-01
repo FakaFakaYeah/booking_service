@@ -6,7 +6,8 @@ from app.core import Base, settings
 from app.core.db import engine, async_session_maker
 
 pytest_plugins = [
-    'tests.fixtures.users'
+    'tests.fixtures.users',
+    'tests.fixtures.data'
 ]
 
 
@@ -29,7 +30,7 @@ def event_loop(request):
     loop.close()
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 async def session():
     async with async_session_maker() as session:
         yield session
