@@ -9,10 +9,10 @@ class RoomDB(BaseModel):
     price: int
     services: list[str]
     quantity: int
-    rooms_left: int
     image_id: int
 
 
 class RoomsPriceDB(RoomDB):
 
+    rooms_left: int
     total_coast: int
