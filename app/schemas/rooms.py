@@ -43,3 +43,14 @@ class RoomsCreate(BaseModel):
                 'image_id': 1
             }
         }
+
+
+class RoomsUpdate(RoomsCreate):
+
+    hotel_id: Optional[PositiveInt] = None
+    name: Optional[str] = None
+    description: Optional[str] = None
+    price: Optional[PositiveInt] = None
+    services: Optional[list[str]] = None
+    quantity: Optional[PositiveInt] = None
+    image_id: Optional[PositiveInt] = None
