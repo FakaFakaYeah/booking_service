@@ -53,3 +53,17 @@ async def room_update(
     if room_upd.hotel_id:
         await HotelsCrud.get_by_id(obj_id=room_upd.hotel_id, session=session)
     return await RoomsCrud.update(obj=room, obj_in=room_upd, session=session)
+
+
+@router.delete(
+    '/{room_id}',
+    summary='Удаление номера',
+    dependencies=[Depends(current_superuser)],
+    description='Удалять номера может только администратор'
+)
+async def delete_room(
+        room_id: int,
+        session: AsyncSession = Depends(get_async_session)
+):
+    room = await RoomsCrud.get_by_id(obj_id=room_id, session=session)
+    await RoomsCrud.delete(obj=room, session=session)
