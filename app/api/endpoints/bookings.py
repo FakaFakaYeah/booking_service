@@ -75,7 +75,8 @@ async def delete_booking(
 
 @router.get(
     '/{booking_id}',
-    response_model=BookingDB
+    summary='Получение конкретного букинга',
+    response_model=BookingDB,
 )
 async def get_booking(
     booking_id: int,
