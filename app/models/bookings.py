@@ -22,3 +22,4 @@ class Bookings(Base):
 
     def __repr__(self):
         return f'Бронирование #{self.id} c {self.date_from} по {self.date_to}'
+
